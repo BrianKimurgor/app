@@ -1,15 +1,19 @@
 package fee;
 
+import java.math.BigDecimal;
+
 public class Fee {
     private String feeId;
     private String feeName;
-    private double feeAmount;
+    private BigDecimal feeAmt;  // Use BigDecimal for fee amounts
+    private String feeDesc;     // Include FeeDesc
 
     // Constructor
-    public Fee(String feeId, String feeName, double feeAmount) {
+    public Fee(String feeId, String feeName, BigDecimal feeAmt, String feeDesc) {
         this.feeId = feeId;
         this.feeName = feeName;
-        this.feeAmount = feeAmount;
+        this.feeAmt = feeAmt;
+        this.feeDesc = feeDesc;
     }
 
     // Getters and Setters
@@ -29,11 +33,19 @@ public class Fee {
         this.feeName = feeName;
     }
 
-    public double getFeeAmount() {
-        return feeAmount;
+    public BigDecimal getFeeAmt() {
+        return feeAmt;
     }
 
-    public void setFeeAmount(double feeAmount) {
-        this.feeAmount = feeAmount;
+    public void setFeeAmt(BigDecimal feeAmt) {
+        this.feeAmt = feeAmt;
+    }
+
+    public String getFeeDesc() {
+        return feeDesc;
+    }
+
+    public void setFeeDesc(String feeDesc) {
+        this.feeDesc = feeDesc;
     }
 }

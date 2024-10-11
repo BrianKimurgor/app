@@ -1,6 +1,7 @@
 package fee;
 
 import java.sql.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,12 @@ public class FeeDB {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
-                fees.add(new Fee(rs.getString("FeeId"), rs.getString("FeeName"), rs.getDouble("FeeAmount")));
+                fees.add(new Fee(
+                        rs.getString("FeeId"),
+                        rs.getString("FeeName"),
+                        rs.getBigDecimal("FeeAmt"),
+                        rs.getString("FeeDesc") // Handle FeeDesc
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,12 +37,13 @@ public class FeeDB {
     }
 
     public static boolean addFee(Fee fee) {
-        String query = "INSERT INTO Fees (FeeId, FeeName, FeeAmount) VALUES (?, ?, ?)";
+        String query = "INSERT INTO fees (FeeId, FeeName, FeeAmt, FeeDesc) VALUES (?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, fee.getFeeId());
             pstmt.setString(2, fee.getFeeName());
-            pstmt.setDouble(3, fee.getFeeAmount());
+            pstmt.setBigDecimal(3, fee.getFeeAmt());
+            pstmt.setString(4, fee.getFeeDesc()); // Insert FeeDesc
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,12 +52,13 @@ public class FeeDB {
     }
 
     public static boolean updateFee(Fee fee) {
-        String query = "UPDATE Fees SET FeeName = ?, FeeAmount = ? WHERE FeeId = ?";
+        String query = "UPDATE fees SET FeeName = ?, FeeAmt = ?, FeeDesc = ? WHERE FeeId = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, fee.getFeeName());
-            pstmt.setDouble(2, fee.getFeeAmount());
-            pstmt.setString(3, fee.getFeeId());
+            pstmt.setBigDecimal(2, fee.getFeeAmt());
+            pstmt.setString(3, fee.getFeeDesc()); // Update FeeDesc
+            pstmt.setString(4, fee.getFeeId());
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,7 +67,7 @@ public class FeeDB {
     }
 
     public static boolean deleteFee(String feeId) {
-        String query = "DELETE FROM Fees WHERE FeeId = ?";
+        String query = "DELETE FROM fees WHERE FeeId = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, feeId);

@@ -1,8 +1,8 @@
 package fee;
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
+import java.math.BigDecimal;
 
 public class MainApp extends Application {
 
@@ -34,11 +35,14 @@ public class MainApp extends Application {
         TableColumn<Fee, String> feeNameColumn = new TableColumn<>("Fee Name");
         feeNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFeeName()));
 
-        TableColumn<Fee, Double> feeAmountColumn = new TableColumn<>("Fee Amount");
-        feeAmountColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getFeeAmount()).asObject());
+        TableColumn<Fee, BigDecimal> feeAmountColumn = new TableColumn<>("Fee Amount");
+        feeAmountColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getFeeAmt()));
+
+        TableColumn<Fee, String> feeDescColumn = new TableColumn<>("Fee Description");
+        feeDescColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFeeDesc()));
 
         // Add columns to the table
-        feeTable.getColumns().addAll(feeIdColumn, feeNameColumn, feeAmountColumn);
+        feeTable.getColumns().addAll(feeIdColumn, feeNameColumn, feeAmountColumn, feeDescColumn);
 
         // Buttons for adding, editing, and deleting fees
         Button addButton = new Button("Add");
@@ -72,7 +76,6 @@ public class MainApp extends Application {
             System.out.println("Add Fee dialog was canceled or invalid input.");  // Debug message
         }
     }
-    
 
     private void handleEdit() {
         Fee selectedFee = feeTable.getSelectionModel().getSelectedItem();
@@ -107,30 +110,28 @@ public class MainApp extends Application {
 
     // Show add/edit dialog
     private Fee showFeeDialog(Fee fee) {
-    try {
-        System.out.println("Loading Fee Dialog FXML...");  // Debug line
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("feeDialog.fxml"));
-        GridPane page = loader.load();  // Change DialogPane to GridPane
-        
-        Stage dialogStage = new Stage();
-        dialogStage.setTitle(fee == null ? "Add Fee" : "Edit Fee");
-        dialogStage.initModality(Modality.WINDOW_MODAL);
-        dialogStage.setScene(new Scene(page));
+        try {
+            System.out.println("Loading Fee Dialog FXML...");  // Debug line
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("feeDialog.fxml"));
+            GridPane page = loader.load();  // Change DialogPane to GridPane
 
-        FeeDialogController controller = loader.getController();
-        controller.setDialogStage(dialogStage);
-        controller.setFee(fee);
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle(fee == null ? "Add Fee" : "Edit Fee");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.setScene(new Scene(page));
 
-        dialogStage.showAndWait();
-        return controller.isConfirmed() ? controller.getFee() : null;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
+            FeeDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setFee(fee);
+
+            dialogStage.showAndWait();
+            return controller.isConfirmed() ? controller.getFee() : null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-}
-
-    
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

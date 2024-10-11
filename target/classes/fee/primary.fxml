@@ -9,6 +9,7 @@
             <TableColumn text="Fee ID" fx:id="feeIdColumn"/>
             <TableColumn text="Fee Name" fx:id="feeNameColumn"/>
             <TableColumn text="Fee Amount" fx:id="feeAmountColumn"/>
+            <TableColumn  text="Fee Description" fx:id="feeDescriptionColumn"/>
         </columns>
     </TableView>
     <HBox spacing="10">

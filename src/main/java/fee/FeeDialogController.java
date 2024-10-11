@@ -5,6 +5,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
+
 public class FeeDialogController {
 
     @FXML
@@ -13,6 +15,8 @@ public class FeeDialogController {
     private TextField feeNameField;
     @FXML
     private TextField feeAmountField;
+    @FXML
+    private TextField feeDescField;  // Add feeDesc field
 
     private Stage dialogStage;
     private Fee fee;
@@ -32,9 +36,10 @@ public class FeeDialogController {
             this.fee = fee;
             feeIdField.setText(fee.getFeeId());
             feeNameField.setText(fee.getFeeName());
-            feeAmountField.setText(Double.toString(fee.getFeeAmount()));
+            feeAmountField.setText(fee.getFeeAmt().toString());  // Use BigDecimal's toString method
+            feeDescField.setText(fee.getFeeDesc());  // Set FeeDesc
         } else {
-            this.fee = new Fee("", "", 0);  // Default fee object for adding
+            this.fee = new Fee("", "", BigDecimal.ZERO, "");  // Default fee object for adding
         }
     }
 
@@ -52,7 +57,8 @@ public class FeeDialogController {
             // Set fee details only if input is valid
             fee.setFeeId(feeIdField.getText());
             fee.setFeeName(feeNameField.getText());
-            fee.setFeeAmount(Double.parseDouble(feeAmountField.getText()));
+            fee.setFeeAmt(new BigDecimal(feeAmountField.getText()));  // Parse fee amount as BigDecimal
+            fee.setFeeDesc(feeDescField.getText());  // Set fee description
             confirmed = true;  // Confirm the dialog
             dialogStage.close();  // Close the dialog
         }
@@ -76,12 +82,11 @@ public class FeeDialogController {
             errorMessage += "No valid fee amount!\n";
         } else {
             try {
-                Double.parseDouble(feeAmountField.getText());
+                new BigDecimal(feeAmountField.getText());  // Validate BigDecimal format
             } catch (NumberFormatException e) {
                 errorMessage += "No valid fee amount (must be a number)!\n";
             }
         }
-
         if (errorMessage.isEmpty()) {
             return true;  // Input is valid
         } else {

@@ -7,7 +7,9 @@
 <?import javafx.scene.layout.GridPane?>
 
 <GridPane fx:controller="fee.FeeDialogController" xmlns:fx="http://javafx.com/fxml">
-    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
 
     <Label text="Fee ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
     <TextField fx:id="feeIdField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -18,6 +20,11 @@
     <Label text="Fee Amount:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
     <TextField fx:id="feeAmountField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-    <Button text="OK" onAction="#handleOk" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-    <Button text="Cancel" onAction="#handleCancel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <!-- New Fee Description field -->
+    <Label text="Fee Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <TextField fx:id="feeDescField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <!-- Buttons -->
+    <Button text="OK" onAction="#handleOk" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <Button text="Cancel" onAction="#handleCancel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 </GridPane>
